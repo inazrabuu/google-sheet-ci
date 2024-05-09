@@ -22,7 +22,7 @@ class Google_sheets_helper {
     $doc->loadHtmlFile($url);
     $xml = simplexml_import_dom($doc);
 
-    $rows = $xml->body->div[1]->div->div->table->tbody->tr;
+    $rows = $xml->xpath('body/div/div/div/table/tbody/tr');
 
     return $this->simplify($rows);
   }
