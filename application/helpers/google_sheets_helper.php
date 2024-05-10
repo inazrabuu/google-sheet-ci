@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Google_sheets_helper {
   protected $api_key;
+  protected $data = [];
+  protected $data_names = [];
 
   public function __construct() {
     $this->api_key = '';
@@ -35,7 +37,6 @@ class Google_sheets_helper {
 
   public function simplify($rows) {
     $head = [];
-    $data = [];
     for ($i = 0; $i < count($rows[0]->td); $i++) {
       array_push($head, $rows[0]->td[$i]->__toString());
     }
@@ -46,21 +47,40 @@ class Google_sheets_helper {
 
       for ($j = 0; $j < count($d); $j++) {
         $key = strtolower($head[$j]);
+        $val = '';
+
         if (isset($d[$j]->a)) {
-          $a[$key] = $d[$j]->a->__toString();  
+          $val = $d[$j]->a->__toString();  
         } else if (isset($d[$j]->div)) {
           if (isset($d[$j]->div->a)) {
-            $a[$key] = $d[$j]->div->a->__toString();
+            $val = $d[$j]->div->a->__toString();
           } else {
-            $a[$key] = $d[$j]->div->__toString();
+            $val = $d[$j]->div->__toString();
           }
         } else {
-          $a[$key] = $d[$j]->__toString(); 
+          $val = $d[$j]->__toString(); 
+        }
+
+        $a[$key] = $val;
+        if ($key == 'name') {
+          array_push($this->data_names, $val);
         }
       }
-      array_push($data, $a);
+      array_push($this->data, $a);
+    }
+  }
+
+  public function get_loaded_data() {
+    return $this->data;
+  }
+
+  public function filter($keyword) {
+    $filtered = [];
+    $matches = preg_grep('/' . $keyword . '/i', $this->data_names);
+    foreach ($matches as $k => $v) {
+      array_push($filtered, $this->data[$k]);
     }
 
-    return $data;
+    return $filtered;
   }
 }
