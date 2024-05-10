@@ -54,3 +54,4 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['sheet'] = 'sheet';
+$route['sheet/filter/(:any)'] = 'sheet/sheet_filter/$1';
