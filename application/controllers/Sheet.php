@@ -1,8 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once APPPATH . 'third_party/google-api-php-client/vendor/autoload.php';
-
 class Sheet extends CI_Controller {
 
 	/**
