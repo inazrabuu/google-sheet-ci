@@ -26,7 +26,7 @@ class Google_sheets_helper {
 
     $rows = $xml->xpath('body/div/div/div/table/tbody/tr');
 
-    return $this->simplify($rows);
+    $this->simplify($rows);
   }
 
   public function d($var) {
@@ -49,21 +49,23 @@ class Google_sheets_helper {
         $key = strtolower($head[$j]);
         $val = '';
 
-        if (isset($d[$j]->a)) {
-          $val = $d[$j]->a->__toString();  
-        } else if (isset($d[$j]->div)) {
-          if (isset($d[$j]->div->a)) {
-            $val = $d[$j]->div->a->__toString();
+        if ($key != '') {
+          if (isset($d[$j]->a)) {
+            $val = $d[$j]->a->__toString();  
+          } else if (isset($d[$j]->div)) {
+            if (isset($d[$j]->div->a)) {
+              $val = $d[$j]->div->a->__toString();
+            } else {
+              $val = $d[$j]->div->__toString();
+            }
           } else {
-            $val = $d[$j]->div->__toString();
+            $val = $d[$j]->__toString(); 
           }
-        } else {
-          $val = $d[$j]->__toString(); 
-        }
-
-        $a[$key] = $val;
-        if ($key == 'name') {
-          array_push($this->data_names, $val);
+  
+          $a[$key] = $val;
+          if ($key == 'name') {
+            array_push($this->data_names, $val);
+          }
         }
       }
       array_push($this->data, $a);
