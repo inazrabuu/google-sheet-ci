@@ -56,3 +56,4 @@ $route['translate_uri_dashes'] = FALSE;
 $route['sheet'] = 'sheet';
 $route['sheet/filter/(:any)'] = 'sheet/sheet_filter/$1';
 $route['sheet/stat'] = 'sheet/statistic';
+$route['sheet/byfunction/(:any)'] = 'sheet/sheet_filter_function/$1';
