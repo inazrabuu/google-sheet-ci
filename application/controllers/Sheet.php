@@ -50,4 +50,20 @@ class Sheet extends CI_Controller {
 
 		$this->sheet->d($data['table']);
 	}
+
+	public function sheet_filter_function($param) {
+		switch ($param) {
+			case 'sparepart': case 'service':
+				$q = $param;
+			break;
+			default:
+				$q = 'sales';
+			break;
+		}
+
+		$this->sheet->load_published_sheet($this->sheet_dealers_url);
+		$data['table'] = $this->sheet->filter_function($q);		
+
+		$this->load->view('sheet', $data);
+	}
 }
