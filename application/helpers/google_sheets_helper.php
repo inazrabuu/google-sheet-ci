@@ -28,7 +28,7 @@ class Google_sheets_helper {
   public function load_stat($url) {
     $rows = $this->load_sheet($url);
 
-    return $this->stat_to_array($rows);
+    $this->stat_to_array($rows);
   }
 
   public function d($var) {
