@@ -10,23 +10,25 @@ class Google_sheets_helper {
     $this->api_key = '';
   }
 
-  public function load_sheet($spreadsheet_id, $range) {
-    $url = "https://sheets.googleapis.com/v4/spreadsheets/{$spreadsheet_id}/values/{$range}?key={$this->api_key}";
+  public function load_sheet($url) {
+    $doc = new DOMDocument();
+    $doc->loadHtmlFile($url);
 
-    $response = file_get_contents($url);
-    $data = json_decode($response, true);
+    $xml = simplexml_import_dom($doc);
 
-    return $data;
+    return $xml->xpath('body/div/div/div/table/tbody/tr');
   }
 
   public function load_published_sheet($url) {
-    $doc = new DOMDocument();
-    $doc->loadHtmlFile($url);
-    $xml = simplexml_import_dom($doc);
-
-    $rows = $xml->xpath('body/div/div/div/table/tbody/tr');
+    $rows = $this->load_sheet($url);
 
     $this->simplify($rows);
+  }
+
+  public function load_stat($url) {
+    $rows = $this->load_sheet($url);
+
+    return $this->stat_to_array($rows);
   }
 
   public function d($var) {
@@ -72,6 +74,15 @@ class Google_sheets_helper {
     }
   }
 
+  public function stat_to_array($rows) {
+    $header = $rows[0]->xpath('td');
+    $data = $rows[1]->xpath('td');
+
+    for ($i = 0; $i < count($header); $i++) {
+      $this->data[$header[$i]->__toString()] = $data[$i]->__toString();
+    }
+  }
+
   public function get_loaded_data() {
     return $this->data;
   }
@@ -81,6 +92,17 @@ class Google_sheets_helper {
     $matches = preg_grep('/' . $keyword . '/i', $this->data_names);
     foreach ($matches as $k => $v) {
       array_push($filtered, $this->data[$k]);
+    }
+
+    return $filtered;
+  }
+
+  public function filter_function($q) {
+    $filtered = [];
+    foreach ($this->data as $k) {
+      if (strtolower($k[$q]) === 'v') { 
+        array_push($filtered, $k);
+      }
     }
 
     return $filtered;
