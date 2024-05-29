@@ -45,6 +45,9 @@ class Sheet extends CI_Controller {
 	}
 
 	public function statistic() {
+		$xml = $this->sheet->load_stat($this->sheet_stat_url);
+		$data['table'] = $this->sheet->get_loaded_data();
 
+		$this->sheet->d($data['table']);
 	}
 }
