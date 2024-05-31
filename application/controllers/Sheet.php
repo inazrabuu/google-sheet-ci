@@ -38,8 +38,10 @@ class Sheet extends CI_Controller {
 
 	public function sheet_filter($param)
 	{
+		$q = $this->input->get('q') ? $this->input->get('q') : 'all';
+		
 		$this->sheet->load_published_sheet($this->sheet_dealers_url);
-		$data['table'] = $this->sheet->filter(urldecode($param));
+		$data['table'] = $this->sheet->filter(urldecode($param), $q);
 
 		$this->load->view('sheet', $data);
 	}
