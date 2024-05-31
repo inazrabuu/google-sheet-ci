@@ -87,11 +87,20 @@ class Google_sheets_helper {
     return $this->data;
   }
 
-  public function filter($keyword) {
+  public function filter($keyword, $function) {
+    $f = $function == 'sales' || $function == 'service' || $function == 'sparepart' ? 
+      $function : 'all';
+
     $filtered = [];
     $matches = preg_grep('/' . $keyword . '/i', $this->data_names);
     foreach ($matches as $k => $v) {
-      array_push($filtered, $this->data[$k]);
+      if ($f != 'all') {
+        if (strtolower($this->data[$k][$f]) == 'v') {
+          array_push($filtered, $this->data[$k]);
+        }
+      } else {
+        array_push($filtered, $this->data[$k]);
+      }
     }
 
     return $filtered;
