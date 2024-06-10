@@ -91,19 +91,7 @@ class Google_sheets_helper {
     $f = $function == 'sales' || $function == 'service' || $function == 'sparepart' ? 
       $function : 'all';
 
-    $filtered = [];
-    $matches = preg_grep('/' . $keyword . '/i', $this->data_names);
-    foreach ($matches as $k => $v) {
-      if ($f != 'all') {
-        if (strtolower($this->data[$k][$f]) == 'v') {
-          array_push($filtered, $this->data[$k]);
-        }
-      } else {
-        array_push($filtered, $this->data[$k]);
-      }
-    }
-
-    return $filtered;
+    return $this->filter_keyword($this->data_names, $keyword, $f);
   }
 
   public function filter_function($q) {
@@ -116,4 +104,20 @@ class Google_sheets_helper {
 
     return $filtered;
   }
-}
+
+  public function filter_keyword($data, $keyword, $f) {
+    $filtered = [];
+    $matches = preg_grep('/' . $keyword . '/i', $data);
+    foreach ($matches as $k => $v) {
+      if ($f != 'all') {
+        if (strtolower($this->data[$k][$f]) == 'v') {
+          array_push($filtered, $this->data[$k]);
+        }
+      } else {
+        array_push($filtered, $this->data[$k]);
+      }
+    }
+
+    return $filtered;
+  }
+} 
