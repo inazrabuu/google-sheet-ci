@@ -91,7 +91,7 @@ class Google_sheets_helper {
     $f = $function == 'sales' || $function == 'service' || $function == 'sparepart' ? 
       $function : 'all';
 
-    return $this->filter_keyword($this->data_names, $keyword, $f);
+    return $this->filter_keyword($this->data_names, $keyword, $f, 'v');
   }
 
   public function filter_function($q) {
@@ -105,12 +105,19 @@ class Google_sheets_helper {
     return $filtered;
   }
 
-  public function filter_keyword($data, $keyword, $f) {
+  public function filter_by_servicetype($servicetype, $keyword) {
+    $v = $servicetype == 'branch' || $function == 'maindealer' ? 
+      $servicetype : 'all';
+
+    return $this->filter_keyword($this->data_names, $keyword, 'servicetype', $v);
+  }
+
+  public function filter_keyword($data, $keyword, $key, $value) {
     $filtered = [];
     $matches = preg_grep('/' . $keyword . '/i', $data);
     foreach ($matches as $k => $v) {
-      if ($f != 'all') {
-        if (strtolower($this->data[$k][$f]) == 'v') {
+      if ($key != 'all') {
+        if (strtolower($this->data[$k][$f]) == $value) {
           array_push($filtered, $this->data[$k]);
         }
       } else {
