@@ -106,8 +106,17 @@ class Google_sheets_helper {
   }
 
   public function filter_by_servicetype($servicetype, $keyword) {
-    $v = $servicetype == 'branch' || $function == 'maindealer' ? 
-      $servicetype : 'all';
+    switch ($servicetype) {
+      case 'branch':
+        $v = 'branch';
+      break;
+      case 'maindealer':
+        $v = 'main dealer';
+      break;
+      default:
+        $v = 'all';
+      break;
+    }
 
     return $this->filter_keyword($this->data_names, $keyword, 'servicetype', $v);
   }
@@ -117,7 +126,7 @@ class Google_sheets_helper {
     $matches = preg_grep('/' . $keyword . '/i', $data);
     foreach ($matches as $k => $v) {
       if ($key != 'all') {
-        if (strtolower($this->data[$k][$f]) == $value) {
+        if (strtolower($this->data[$k][$key]) == $value) {
           array_push($filtered, $this->data[$k]);
         }
       } else {
