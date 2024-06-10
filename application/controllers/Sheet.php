@@ -68,4 +68,12 @@ class Sheet extends CI_Controller {
 
 		$this->load->view('sheet', $data);
 	}
+
+	public function sheet_filter_servicetype($param) {
+		$this->sheet->load_published_sheet($this->sheet_dealers_url);
+		$data['table'] = $this->sheet->filter_by_servicetype($param, '');
+		$this->sheet->d(count($data['table']));
+
+		$this->load->view('sheet', $data);
+	}
 }
